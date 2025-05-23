@@ -15,13 +15,13 @@ function App() {
   //const nuevoArray = [...data, nuevoDato]
   //setData(nuevoArray)
 
-  const [cart, setCart] = useState([nuevoDato])
+  const [cart, setCart] = useState([])
 
   return (
     <>
       <Header
         cart={cart}
-        setCart={setCart}
+        //setCart={setCart}
       />
 
       <main className="container-xl mt-5">
