@@ -1,8 +1,53 @@
 import { useMemo } from "react"
 
-function Header({ cart }) {
+function Header({ cart, setCart }) {
     const isEmpty = useMemo(() => cart.length === 0, [cart])
-    console.log(isEmpty)
+
+    // function updateCart(item, operation) {
+    //     const existItem = cart.findIndex(guitar => guitar.id === item.id);
+    //     if (existItem !== -1) {
+    //         const newCart = [...cart];
+    //         if (operation === "+") {
+    //             newCart[existItem].quantity += 1;
+    //         } else if (operation === "-" && newCart[existItem].quantity > 1) {
+    //             newCart[existItem].quantity -= 1;
+    //         }
+    //         setCart(newCart);
+    //     }
+    // }
+
+    function increaseCart(id) {
+        const updatedCart = cart.map((guitar) => {
+            if (guitar.id === id && guitar.quantity <= 4) {
+                return { ...guitar, quantity: guitar.quantity + 1 };
+            } else {
+                return guitar;
+            }
+        });
+        setCart(updatedCart);
+    }
+
+    function decreaseCart(id) {
+        const updatedCart = cart.map((guitar) => {
+            if (guitar.id === id && guitar.quantity > 1) {
+                return { ...guitar, quantity: guitar.quantity - 1 };
+            } else {
+                return guitar;
+            }
+        });
+        setCart(updatedCart);
+    }
+
+    function removeFromCart(id) {
+        setCart((prevCart) => prevCart.filter((guitar) => guitar.id !== id));
+    }
+
+    function clearCart() {
+        setCart([]);
+    }
+
+    //const total = cart.reduce((acc, guitar) => acc + (guitar.price * guitar.quantity), 0);
+    const totalMemo = useMemo(() => cart.reduce((acc, guitar) => acc + (guitar.price * guitar.quantity), 0), [cart]);
 
     return (
         <>
@@ -21,7 +66,7 @@ function Header({ cart }) {
                                     <div>
                                         {isEmpty ?
                                             (<p className="text-center">El carrito esta vacio</p>) :
-                                            (<div>
+                                            (<>
                                                 <table className="w-100 table">
                                                     <thead>
                                                         <tr>
@@ -47,13 +92,17 @@ function Header({ cart }) {
                                                                         <button
                                                                             type="button"
                                                                             className="btn btn-dark"
+                                                                            //onClick={() => updateCart(guitar, "-")}
+                                                                            onClick={() => decreaseCart(guitar.id)}
                                                                         >
                                                                             -
                                                                         </button>
-                                                                        1
+                                                                        <span>{guitar.quantity}</span>
                                                                         <button
                                                                             type="button"
                                                                             className="btn btn-dark"
+                                                                            //onClick={() => updateCart(guitar, "+")}
+                                                                            onClick={() => increaseCart(guitar.id)}
                                                                         >
                                                                             +
                                                                         </button>
@@ -62,6 +111,7 @@ function Header({ cart }) {
                                                                         <button
                                                                             className="btn btn-danger"
                                                                             type="button"
+                                                                            onClick={() => removeFromCart(guitar.id)}
                                                                         >
                                                                             X
                                                                         </button>
@@ -72,9 +122,9 @@ function Header({ cart }) {
                                                     </tbody>
                                                 </table>
 
-                                                <p className="text-end">Total pagar: <span className="fw-bold">$899</span></p>
-                                                <button className="btn btn-dark w-100 mt-3 p-2">Vaciar Carrito</button>
-                                            </div>)
+                                                <p className="text-end">Total pagar: <span className="fw-bold">${totalMemo}</span></p>
+                                                <button className="btn btn-dark w-100 mt-3 p-2" onClick={() => clearCart()}>Vaciar Carrito</button>
+                                            </>)
                                         }
                                     </div>
 

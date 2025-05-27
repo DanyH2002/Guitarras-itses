@@ -21,7 +21,7 @@ function App() {
     <>
       <Header
         cart={cart}
-        //setCart={setCart}
+        setCart={setCart}
       />
 
       <main className="container-xl mt-5">
